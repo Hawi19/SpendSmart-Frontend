@@ -1,0 +1,29 @@
+body {
+  background-color: #f5f7fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  background-color: #f5f7fa;
+}
+
+.card {
+  transition: transform 0.2s;
+  background-color: #ffffff;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.cardTitle {
+  color: #007bff;
+}
+
+.title {
+  color: #333;
+}

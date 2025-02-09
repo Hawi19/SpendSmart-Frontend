@@ -1,0 +1,170 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
+}
+
+.homeContainer {
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2980b9;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.navTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Pacifico', cursive;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+}
+
+.navLink {
+  margin-right: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+.navButton {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.navButton:hover {
+  background-color: #c0392b;
+}
+
+.hamburger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.welcomeMessage {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.cardsContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap; 
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  flex: 1;
+  margin: 0 10px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-width: 250px;
+  max-width: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.amount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.buttonContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.transactionsContainer {
+  margin-top: 30px;
+}
+
+.transactionsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.transactionsTable th,
+.transactionsTable td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: left;
+}
+
+.transactionsTable th {
+  background-color: #007bff;
+  color: white;
+}
+
+.transactionsTable td {
+  color: #333;
+}
+
+@media (max-width: 800px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navLinks {
+    display: none;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+
+  .navLinks.active {
+    display: flex;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .cardsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    margin: 10px 0;
+    width: 100%;
+  }
+}
