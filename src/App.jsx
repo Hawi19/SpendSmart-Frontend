@@ -9,6 +9,7 @@ import DeleteExpense from "./pages/DeleteExpense";
 import WeeklyExpenses from "./pages/WeeklyExpenses";
 import { ToastContainer } from "react-toastify";
 import Logout from "./pages/Logout";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/api/expense/edit/:id" element={<EditExpense />} />
         <Route path="/api/expense/delete/:id" element={<DeleteExpense />} />
+        <Route path="/verify" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>
   );

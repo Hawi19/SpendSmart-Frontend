@@ -15,7 +15,6 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (!username.trim() || !password.trim()) {
-      console.log("Displaying warning toast");
       toast.warning("Please enter both username and password.");
       return;
     }
@@ -32,30 +31,29 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("username", responseUsername);
 
-      console.log("Displaying success toast");
       toast.success("Login successful!");
-
       setUsername("");
       setPassword("");
       navigate("/home", { state: { username: responseUsername } });
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Login Failed";
-      console.log("Displaying error toast");
       toast.error(errorMessage);
-      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+    <div
+      className={`${styles.container} d-flex align-items-center justify-content-center min-vh-100`}
+    >
       <div
-        className="card shadow p-4"
+        className={`${styles.card} shadow p-4`}
         style={{ width: "400px", borderRadius: "10px" }}
       >
         <h1 className={`${styles.title} text-center mb-4`}>Spend Smart</h1>
         <h3 className="text-center mb-4">Log in</h3>
+
         <div className="form-group">
           <label htmlFor="username">Username</label>
           <input
@@ -67,6 +65,7 @@ const Login = () => {
             required
           />
         </div>
+
         <div className="form-group mt-3">
           <label htmlFor="password">Password</label>
           <input
@@ -78,22 +77,25 @@ const Login = () => {
             required
           />
         </div>
+
         <div className="text-center mt-4">
           <button
-            className={`btn btn-primary ${styles.btn} mt-3`}
+            className={`btn btn-primary ${styles.btn}`}
             onClick={handleLogin}
-
+            disabled={loading}
           >
             {loading ? <BeatLoader size={10} color="#ffffff" /> : "Login"}
           </button>
         </div>
+
         <div className="text-center mt-3">
           <p>
             Already have an account? <Link to="/signup">Sign Up</Link>
           </p>
         </div>
       </div>
-     
+
+      <ToastContainer />
     </div>
   );
 };
