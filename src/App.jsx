@@ -14,7 +14,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 function App() {
   return (
     <BrowserRouter>
-      <ToastContainer />
+     
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />

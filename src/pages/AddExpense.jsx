@@ -4,7 +4,7 @@ import axios from "axios";
 import { apiUrl } from "../api/server.js";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
-import { toast } from "react-toastify"; // Import toast
+import { toast, ToastContainer } from "react-toastify"; // Import toast
 import styles from "./AddExpense.module.css"; // Import your CSS module
 import BackButton from "../component/BackButton.jsx";
 
