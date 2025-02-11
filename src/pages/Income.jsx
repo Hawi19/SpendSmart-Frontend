@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast } from "react-toastify"; // Import toast
+import { toast, ToastContainer } from "react-toastify"; // Import toast
 import styles from "./Income.module.css"; // Import your CSS module
 import BackButton from "../component/BackButton";
 
@@ -70,6 +70,7 @@ const Income = () => {
           <button type="submit" className={styles.button}>
             Update Income
           </button>
+         <ToastContainer/>
         </form>
       </div>
     </>
