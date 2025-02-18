@@ -45,7 +45,7 @@ const VerifyEmail = () => {
           Verify Email
         </button>
       )}
-      <ToastContainer /> {/* Add ToastContainer here */}
+      <ToastContainer/> {/* Add ToastContainer here */}
     </div>
   );
 };

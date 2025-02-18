@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import axios from "axios";
 import { apiUrl } from "../api/server.js";
-import styles from "./Home.module.css"; // Import your CSS module
+import styles from "./Home.module.css"; 
 
 const Home = () => {
   const [totalIncome, setTotalIncome] = useState(0);
@@ -66,7 +66,7 @@ const Home = () => {
         const sortedExpenses = response.data.expenses.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );
-        return sortedExpenses.slice(0, 3); // Get the 3 most recent transactions
+        return sortedExpenses.slice(0, 3); 
       } else {
         console.error("Unexpected response format:", response.data);
         enqueueSnackbar("Unexpected response format for expenses.", {

@@ -14,7 +14,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 function App() {
   return (
     <BrowserRouter>
-     
+   
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />

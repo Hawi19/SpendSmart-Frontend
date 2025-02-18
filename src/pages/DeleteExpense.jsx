@@ -2,9 +2,10 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 import BackButton from "../component/BackButton";
-import styles from "./DeleteExpense.module.css"; 
+import styles from "./DeleteExpense.module.css";
+
 const DeleteExpense = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -12,28 +13,21 @@ const DeleteExpense = () => {
   const handleDeleteExpense = async () => {
     const token = localStorage.getItem("token");
 
-    
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this expense?"
-    );
-    if (!confirmDelete) {
-      return; 
-    }
-
-    try {
-      await axios.delete(`${apiUrl}/api/expense/${id}`, {
+    axios
+      .delete(`${apiUrl}/api/expense/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+      })
+      .then(() => {
+        toast.success("Expense deleted successfully"); // Show success message
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.error("Error deleting expense:", error);
+        toast.error("Error occurred while deleting the expense. Try again."); // Show error message
       });
-      toast.success("Expense deleted successfully"); // Show success message
-     
-      navigate("/add-expense");
-    } catch (error) {
-      console.error("Error deleting expense:", error);
-      toast.error("Error occurred while deleting the expense. Try again."); // Show error message
-    }
   };
 
   return (
@@ -47,14 +41,14 @@ const DeleteExpense = () => {
           </h5>
           <div className="d-flex justify-content-center">
             <button
-              className="btn btn-primary mx-2" 
+              className="btn btn-primary mx-2"
               onClick={handleDeleteExpense}
             >
               Yes, Delete it
             </button>
             <button
               className="btn btn-secondary mx-2"
-              onClick={() => navigate("/add-expense")} 
+              onClick={() => navigate("/home")}
             >
               Cancel
             </button>

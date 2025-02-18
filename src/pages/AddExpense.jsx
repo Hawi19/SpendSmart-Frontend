@@ -19,7 +19,7 @@ const AddExpense = ({ onExpenseAdded }) => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchExpensesFromAPI = async () => {
+    const fetchExpenses = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/expense`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -32,7 +32,7 @@ const AddExpense = ({ onExpenseAdded }) => {
       }
     };
 
-    fetchExpensesFromAPI();
+    fetchExpenses();
   }, [token]);
 
   const sortExpensesByDate = (expenses) => {
@@ -171,7 +171,7 @@ const AddExpense = ({ onExpenseAdded }) => {
               {expenses.length > 0 ? (
                 expenses.map((expense) => (
                   <tr key={expense._id}>
-                    <td>{expense.category || "N/A"}</td>
+                    <td>{expense.category}</td>
                     <td>
                       {expense.amount ? expense.amount.toFixed(2) : "0.00"}
                     </td>
