@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast, ToastContainer } from "react-toastify"; // Ensure toast is imported
-import styles from "./EditExpense.module.css";
+import { toast } from "react-toastify"; 
+import styles from "./EditExpense.module.css"; 
 import BackButton from "../component/BackButton";
-
 const EditExpense = () => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -33,6 +32,7 @@ const EditExpense = () => {
         setCategory(response.data.category);
         setDate(response.data.date);
         setDescription(response.data.description || "");
+
       } catch (error) {
         if (error.response) {
           toast.error(
@@ -63,17 +63,14 @@ const EditExpense = () => {
     };
 
     try {
-      const response = await axios.put(`${apiUrl}/api/expense/${id}`, data, {
+      await axios.put(`${apiUrl}/api/expense/${id}`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Update Response:", response); // Log the response
       toast.success("Expense updated successfully");
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000); // Delay navigation for 2 seconds
+      navigate("/home");
     } catch (error) {
       toast.error("Error occurred. Try again.");
     }
@@ -87,8 +84,8 @@ const EditExpense = () => {
     <>
       <BackButton className={styles.backButton} />
       <div className={styles.container}>
-        <h1 className="my-2 text-center">Edit Expense</h1>
         <div className={styles.formContainer}>
+          <h1 className={styles.title}>Edit Expense</h1>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Amount</label>
             <input
@@ -159,9 +156,9 @@ const EditExpense = () => {
           </button>
         </div>
       </div>
-      <ToastContainer /> {/* Ensure ToastContainer is included */}
     </>
   );
 };
+ 
 
 export default EditExpense;
