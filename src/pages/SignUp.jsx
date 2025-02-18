@@ -14,10 +14,6 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    toast.info("Welcome to the Sign Up page!"); // Test toast on mount
-  }, []);
-
 const handleSignUp = () => {
   console.log("Sign Up button clicked");
 
@@ -38,7 +34,7 @@ const handleSignUp = () => {
         );
         setTimeout(() => {
           navigate("/");
-        }, 2000); // Delay navigation
+        }, 2000); 
       } else {
         toast.error("Unexpected response. Please try again.");
       }
@@ -57,17 +53,7 @@ const handleSignUp = () => {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
       <div
         className={`${styles.container} d-flex align-items-center justify-content-center min-vh-100`}
       >
