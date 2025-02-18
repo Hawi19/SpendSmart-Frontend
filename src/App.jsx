@@ -7,14 +7,24 @@ import Income from "./pages/Income";
 import EditExpense from "./pages/EditExpense";
 import DeleteExpense from "./pages/DeleteExpense";
 import WeeklyExpenses from "./pages/WeeklyExpenses";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import Logout from "./pages/Logout";
 import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
     <BrowserRouter>
-   
+      <ToastContainer // Place ToastContainer here for global access
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />

@@ -14,6 +14,7 @@ const Income = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const incomeValue = Number(totalIncome);
+
     if (isNaN(incomeValue) || incomeValue < 0) {
       toast.error("Please enter a valid income amount."); // Show error toast
       return;
@@ -38,7 +39,11 @@ const Income = () => {
 
       toast.success("Income updated successfully!"); // Show success toast
       setTotalIncome("");
-      navigate("/home"); // Navigate back to home
+
+      // Delay navigation to allow the success toast to display
+      setTimeout(() => {
+        navigate("/home"); // Navigate back to home
+      }, 2000); // Wait for 2 seconds before navigating
     } catch (error) {
       console.error(
         "Error updating income:",
@@ -54,7 +59,6 @@ const Income = () => {
   return (
     <>
       <BackButton className={styles.backButton} />
-      <div></div>
       <div className={styles.container}>
         <h2>Update Income</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -70,8 +74,8 @@ const Income = () => {
           <button type="submit" className={styles.button}>
             Update Income
           </button>
-         <ToastContainer/>
         </form>
+        <ToastContainer /> {/* Make sure ToastContainer is outside the form */}
       </div>
     </>
   );

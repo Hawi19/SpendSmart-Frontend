@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,38 +14,60 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignUp = () => {
-    console.log("Sign Up button clicked");
-    console.log("Username:", username, "Email:", email, "Password:", password);
+  useEffect(() => {
+    toast.info("Welcome to the Sign Up page!"); // Test toast on mount
+  }, []);
 
-    if (!username.trim() || !email.trim() || !password.trim()) {
-      toast.warning("Please fill in all fields.");
-      return;
-    }
+const handleSignUp = () => {
+  console.log("Sign Up button clicked");
 
-    setLoading(true);
+  if (!username.trim() || !email.trim() || !password.trim()) {
+    toast.warning("Please fill in all fields.");
+    return;
+  }
 
-    axios
-      .post(`${apiUrl}/api/user/signup`, { username, email, password })
-      .then((response) => {
-        console.log("Response from API:", response);
+  setLoading(true);
+
+  axios
+    .post(`${apiUrl}/api/user/signup`, { username, email, password })
+    .then((response) => {
+      console.log("Response from API:", response);
+      if (response.status === 200 || response.status === 201) {
         toast.success(
           "Sign Up successful! Please check your email to verify your account."
         );
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log("Sign Up Error:", error);
-        toast.error("This is a forced error message for testing."); // Test toast
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+        setTimeout(() => {
+          navigate("/");
+        }, 2000); // Delay navigation
+      } else {
+        toast.error("Unexpected response. Please try again.");
+      }
+    })
+    .catch((error) => {
+      console.log("Sign Up Error:", error);
+      console.log("Error Response:", error.response);
+      const errorMessage =
+        error.response?.data?.message || "An error occurred. Please try again.";
+      toast.error(errorMessage);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+};
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={5000} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div
         className={`${styles.container} d-flex align-items-center justify-content-center min-vh-100`}
       >

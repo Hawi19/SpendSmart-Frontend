@@ -200,6 +200,7 @@ const AddExpense = ({ onExpenseAdded }) => {
           </table>
         </div>
       </div>
+      <ToastContainer /> {/* Ensure ToastContainer is included */}
     </>
   );
 };

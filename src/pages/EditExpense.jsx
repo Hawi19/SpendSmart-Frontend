@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast } from "react-toastify"; 
-import styles from "./EditExpense.module.css"; 
+import { toast, ToastContainer } from "react-toastify"; // Ensure toast is imported
+import styles from "./EditExpense.module.css";
 import BackButton from "../component/BackButton";
+
 const EditExpense = () => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -32,7 +33,6 @@ const EditExpense = () => {
         setCategory(response.data.category);
         setDate(response.data.date);
         setDescription(response.data.description || "");
-
       } catch (error) {
         if (error.response) {
           toast.error(
@@ -63,14 +63,17 @@ const EditExpense = () => {
     };
 
     try {
-      await axios.put(`${apiUrl}/api/expense/${id}`, data, {
+      const response = await axios.put(`${apiUrl}/api/expense/${id}`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("Update Response:", response); // Log the response
       toast.success("Expense updated successfully");
-      navigate("/home");
+      setTimeout(() => {
+        navigate("/home");
+      }, 2000); // Delay navigation for 2 seconds
     } catch (error) {
       toast.error("Error occurred. Try again.");
     }
@@ -156,9 +159,9 @@ const EditExpense = () => {
           </button>
         </div>
       </div>
+      <ToastContainer /> {/* Ensure ToastContainer is included */}
     </>
   );
 };
- 
 
 export default EditExpense;

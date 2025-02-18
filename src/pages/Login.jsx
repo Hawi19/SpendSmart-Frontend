@@ -27,6 +27,8 @@ const Login = () => {
         password,
       });
 
+      console.log("Login Response:", response); // Log the response
+
       const { token, username: responseUsername } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("username", responseUsername);
@@ -34,7 +36,10 @@ const Login = () => {
       toast.success("Login successful!");
       setUsername("");
       setPassword("");
-      navigate("/home", { state: { username: responseUsername } });
+
+      setTimeout(() => {
+        navigate("/home", { state: { username: responseUsername } });
+      }, 2000); // Delay navigation
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Login Failed";
       toast.error(errorMessage);

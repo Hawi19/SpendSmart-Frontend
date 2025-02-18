@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify"; // Ensure toast is imported
 import BackButton from "../component/BackButton";
 import styles from "./DeleteExpense.module.css";
 
@@ -13,21 +13,22 @@ const DeleteExpense = () => {
   const handleDeleteExpense = async () => {
     const token = localStorage.getItem("token");
 
-    axios
-      .delete(`${apiUrl}/api/expense/${id}`, {
+    try {
+      const response = await axios.delete(`${apiUrl}/api/expense/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then(() => {
-        toast.success("Expense deleted successfully"); // Show success message
-        navigate("/home");
-      })
-      .catch((error) => {
-        console.error("Error deleting expense:", error);
-        toast.error("Error occurred while deleting the expense. Try again."); // Show error message
       });
+      console.log("Delete Response:", response); // Log the response
+      toast.success("Expense deleted successfully"); // Show success message
+      setTimeout(() => {
+        navigate("/home");
+      }, 2000); // Delay navigation for 2 seconds
+    } catch (error) {
+      console.error("Error deleting expense:", error);
+      toast.error("Error occurred while deleting the expense. Try again."); // Show error message
+    }
   };
 
   return (
@@ -55,6 +56,7 @@ const DeleteExpense = () => {
           </div>
         </div>
       </div>
+      <ToastContainer /> {/* Ensure ToastContainer is included */}
     </>
   );
 };

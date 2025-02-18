@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { apiUrl } from "../api/server.js";
-import { useSnackbar } from "notistack";
 import ExpenseCalendar from "./ExpenseCalendar.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./WeeklyExpenses.module.css";
@@ -14,7 +13,6 @@ const WeeklyExpenses = () => {
   });
   const [weeklyExpenses, setWeeklyExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -37,16 +35,14 @@ const WeeklyExpenses = () => {
         setWeeklyExpenses(filteredExpenses);
       } catch (error) {
         console.error("Error fetching weekly expenses:", error);
-        enqueueSnackbar("Error fetching weekly expenses. Try again.", {
-          variant: "error",
-        });
+        // Handle error with a simple console log or a message in the UI
       } finally {
         setLoading(false);
       }
     };
 
     fetchWeeklyExpenses();
-  }, [selectedWeek, token, enqueueSnackbar]);
+  }, [selectedWeek, token]);
 
   const totalExpenses = weeklyExpenses
     .reduce((acc, expense) => acc + expense.amount, 0)
