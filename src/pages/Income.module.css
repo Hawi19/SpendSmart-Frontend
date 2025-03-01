@@ -1,6 +1,7 @@
-body{
-    background-color: #f5f7fa;
+body {
+  background-color: #f5f7fa;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -16,10 +17,22 @@ h2 {
   color: #333;
 }
 
-.form {
+.formsContainer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px; 
+  gap: 20px;
+
+
+}
+
+.formSection {
+  flex: 1; 
+  background-color: #f5f7fa;
+  padding: 20px; 
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
 .input {
@@ -27,7 +40,7 @@ h2 {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 20px;
-  width: 300px;
+  width: 100%;
 }
 
 .button {
@@ -47,4 +60,12 @@ h2 {
 .message {
   margin-top: 20px;
   color: #28a745;
+}
+
+
+@media (max-width: 800px) {
+  .formsContainer {
+    flex-direction: column; 
+    width: 400px;
+  }
 }
