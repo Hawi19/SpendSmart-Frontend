@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://spendsmart-backend-2.onrender.com",
+  baseURL: "https://spendsmart-backend-3.onrender.com",
 });
 
 axiosInstance.interceptors.request.use(
