@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server.js";
 import { AiOutlineEdit } from "react-icons/ai";
-import { MdOutlineDelete } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify"; // Import toast
+import { BeatLoader } from "react-spinners"; // Import BeatLoader
 import styles from "./AddExpense.module.css"; // Import your CSS module
 import BackButton from "../component/BackButton.jsx";
+import Navbar from "./Navbar.jsx";
 
 const AddExpense = ({ onExpenseAdded }) => {
   const [description, setDescription] = useState("");
@@ -15,6 +16,8 @@ const AddExpense = ({ onExpenseAdded }) => {
   const [category, setCategory] = useState("");
   const [otherCategory, setOtherCategory] = useState("");
   const [expenses, setExpenses] = useState([]);
+  const [selectedExpenses, setSelectedExpenses] = useState(new Set());
+  const [loading, setLoading] = useState(false); // Loading state for saving expense
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -52,6 +55,8 @@ const AddExpense = ({ onExpenseAdded }) => {
       category: category === "Other" ? otherCategory : category,
     };
 
+    setLoading(true); // Start loading
+
     try {
       const response = await axios.post(`${apiUrl}/api/expense`, data, {
         headers: {
@@ -76,13 +81,50 @@ const AddExpense = ({ onExpenseAdded }) => {
       setCategory("");
       setOtherCategory("");
     } catch (error) {
-      console.error("Error details:", error.response || error);
-      toast.error("Error occurred. Try again.");
+      console.error(
+        "Error details:",
+        error.response ? error.response.data : error.message
+      );
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
+  };
+
+  const handleSelectExpense = (id) => {
+    const updatedSelection = new Set(selectedExpenses);
+    if (updatedSelection.has(id)) {
+      updatedSelection.delete(id);
+    } else {
+      updatedSelection.add(id);
+    }
+    setSelectedExpenses(updatedSelection);
+  };
+
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = new Set(expenses.map((expense) => expense._id));
+      setSelectedExpenses(allIds);
+    } else {
+      setSelectedExpenses(new Set());
+    }
+  };
+
+  const handleDeleteSelectedExpenses = () => {
+    if (selectedExpenses.size === 0) {
+      toast.error("Please select at least one expense to delete.");
+      return;
+    }
+
+    // Navigate to DeleteExpense component with selected IDs
+    navigate("/api/expense/delete", {
+      state: { selectedIds: Array.from(selectedExpenses) },
+    });
   };
 
   return (
     <>
+      <Navbar />
       <BackButton className={styles.backButton} />
       <div className={styles.container}>
         <div className={styles.formContainer}>
@@ -149,8 +191,8 @@ const AddExpense = ({ onExpenseAdded }) => {
               className={styles.input}
             />
           </div>
-          <button className={styles.button} onClick={handleSaveExpense}>
-            Save
+          <button className={styles.button} onClick={handleSaveExpense} disabled={loading}>
+            {loading ? <BeatLoader size={10} color="#ffffff" /> : "Save"}
           </button>
         </div>
 
@@ -160,6 +202,16 @@ const AddExpense = ({ onExpenseAdded }) => {
           <table className={styles.table}>
             <thead>
               <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={
+                      selectedExpenses.size === expenses.length &&
+                      expenses.length > 0
+                    }
+                  />
+                </th>
                 <th>Category</th>
                 <th>Amount</th>
                 <th>Date</th>
@@ -171,6 +223,13 @@ const AddExpense = ({ onExpenseAdded }) => {
               {expenses.length > 0 ? (
                 expenses.map((expense) => (
                   <tr key={expense._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedExpenses.has(expense._id)}
+                        onChange={() => handleSelectExpense(expense._id)}
+                      />
+                    </td>
                     <td>{expense.category}</td>
                     <td>
                       {expense.amount ? expense.amount.toFixed(2) : "0.00"}
@@ -181,23 +240,29 @@ const AddExpense = ({ onExpenseAdded }) => {
                         : "N/A"}
                     </td>
                     <td>{expense.description || "N/A"}</td>
-                    <td className={styles.actions}>
-                      <Link to={`/api/expense/edit/${expense._id}`}>
-                        <AiOutlineEdit className={styles.icon} />
-                      </Link>
-                      <Link to={`/api/expense/delete/${expense._id}`}>
-                        <MdOutlineDelete className={styles.icon} />
-                      </Link>
+                    <td>
+                      <AiOutlineEdit
+                        className={styles.icon}
+                        onClick={() =>
+                          navigate(`/api/expense/edit/${expense._id}`)
+                        }
+                      />
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5">No expenses recorded.</td>
+                  <td colSpan="6">No expenses recorded.</td>
                 </tr>
               )}
             </tbody>
           </table>
+          <button
+            className={styles.button}
+            onClick={handleDeleteSelectedExpenses}
+          >
+            Delete Selected
+          </button>
         </div>
       </div>
       <ToastContainer /> {/* Ensure ToastContainer is included */}

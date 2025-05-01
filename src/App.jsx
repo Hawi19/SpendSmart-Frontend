@@ -34,7 +34,7 @@ function App() {
         <Route path="/weekly-expenses" element={<WeeklyExpenses />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/api/expense/edit/:id" element={<EditExpense />} />
-        <Route path="/api/expense/delete/:id" element={<DeleteExpense />} />
+        <Route path="/api/expense/delete" element={<DeleteExpense />} />
         <Route path="/verify" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>

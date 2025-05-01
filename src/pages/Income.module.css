@@ -1,38 +1,23 @@
 body {
   background-color: #f5f7fa;
+  margin: 0;
+
 }
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 20px;
   background-color: #f5f7fa;
-  min-height: 100vh;
+ height: 100%;
+  overflow: hidden;
 }
 
 h2 {
   margin-bottom: 20px;
   color: #333;
-}
-
-.formsContainer {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 800px; 
-  gap: 20px;
-
-
-}
-
-.formSection {
-  flex: 1; 
-  background-color: #f5f7fa;
-  padding: 20px; 
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
 .input {
@@ -51,21 +36,32 @@ h2 {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin: 0 10px; /* Add margin for spacing */
 }
 
 .button:hover {
   background-color: #0056b3;
 }
 
-.message {
-  margin-top: 20px;
-  color: #28a745;
+.buttonContainer {
+  display: flex; /* Arrange buttons in a row */
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center; /* Center buttons vertically */
 }
 
+.spinner {
+  font-size: 20px; /* Adjust font size for visibility */
+  animation: blink 1s infinite; /* Blink animation */
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
 
 @media (max-width: 800px) {
   .formsContainer {
-    flex-direction: column; 
+    flex-direction: column;
     width: 400px;
   }
 }

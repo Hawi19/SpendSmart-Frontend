@@ -1,19 +1,20 @@
 
 body {
   background-color: #f5f7fa;
- 
+ overflow-x: hidden;
 }
 
 .container {
   display: flex;
   justify-content: space-around; 
   background-color: #f5f7fa; 
-  min-height: 100vh; 
+  min-height: 100%; 
   min-width: 100vw;
 }
 
 .formContainer {
   max-width: 400px; 
+  height: 100%;
   width: 100%;
   background-color: #f8f9fa;
   padding: 20px; 
@@ -48,6 +49,7 @@ body {
 .button {
   padding: 10px 20px;
   border: none;
+  margin-top: 15PX;
   border-radius: 5px;
   background-color: hsl(211, 100%, 50%); 
   color: white; 

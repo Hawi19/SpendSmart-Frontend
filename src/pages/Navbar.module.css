@@ -1,0 +1,86 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2980b9;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.navTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Pacifico', cursive;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+}
+  .navLink:hover {
+  color: #ffffff; 
+  background-color: rgba(255, 255, 255, 0.2); 
+}
+
+.navLink {
+  margin-right: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+.navButton {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.navButton:hover {
+  background-color: #c0392b;
+}
+
+.hamburger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+@media (max-width: 800px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  
+  
+  }
+
+  .navLinks {
+    display: none;
+    flex-direction: column;
+    margin-top: 10px;
+
+ 
+  }
+
+  .navLinks.active {
+    display: flex;
+  }
+
+
+  .hamburger {
+    display: block;
+  }
+
+  .cardsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    margin: 10px 0;
+    width: 100%;
+  }
+}

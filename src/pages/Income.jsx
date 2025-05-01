@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
 import { toast, ToastContainer } from "react-toastify"; // Import toast
+import { BeatLoader } from "react-spinners"; // Import BeatLoader
 import styles from "./Income.module.css"; // Import your CSS module
 import BackButton from "../component/BackButton";
-
+import Navbar from "./Navbar";
 
 const Income = () => {
-  const [totalIncome, setTotalIncome] = useState("");
+  const [incomeToAdd, setIncomeToAdd] = useState("");
+  const [loadingUpdate, setLoadingUpdate] = useState(false); // Loading state for updating income
+  const [loadingRemove, setLoadingRemove] = useState(false); // Loading state for removing income
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -25,18 +28,20 @@ const Income = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdateIncome = async (e) => {
     e.preventDefault();
-    const incomeValue = Number(totalIncome);
+    const incomeValue = Number(incomeToAdd);
 
     if (isNaN(incomeValue) || incomeValue < 0) {
       toast.error("Please enter a valid income amount.");
       return;
     }
 
+    setLoadingUpdate(true); // Start loading for update
+
     try {
       const currentIncome = await fetchCurrentIncome();
-      const newTotalIncome = currentIncome + incomeValue; // Add new income to existing income
+      const newTotalIncome = currentIncome + incomeValue;
 
       const response = await axios.put(
         `${apiUrl}/api/user/income`,
@@ -50,14 +55,12 @@ const Income = () => {
       );
 
       if (response.data.totalIncome !== undefined) {
-        console.log("Updated Income:", response.data.totalIncome);
         localStorage.setItem("totalIncome", response.data.totalIncome);
       }
 
       toast.success("Income updated successfully!");
-      setTotalIncome("");
+      setIncomeToAdd("");
 
-      // Delay navigation to allow the success toast to display
       setTimeout(() => {
         navigate("/home");
       }, 2000);
@@ -67,27 +70,82 @@ const Income = () => {
         error.response?.data?.message ||
           "Error updating income. Please try again."
       );
+    } finally {
+      setLoadingUpdate(false); // Stop loading for update
+    }
+  };
+
+  const handleRemoveIncome = async () => {
+    setLoadingRemove(true); // Start loading for remove
+    try {
+      const response = await axios.put(
+        `${apiUrl}/api/user/income`,
+        { totalIncome: 0 }, // Set income to zero
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.totalIncome !== undefined) {
+        localStorage.setItem("totalIncome", 0);
+        toast.success("Income removed successfully!");
+        setIncomeToAdd(""); // Clear input field
+      }
+    } catch (error) {
+      console.error("Error removing income:", error.response || error);
+      toast.error(
+        error.response?.data?.message ||
+          "Error removing income. Please try again."
+      );
+    } finally {
+      setLoadingRemove(false); // Stop loading for remove
     }
   };
 
   return (
     <>
+      <Navbar />
       <BackButton className={styles.backButton} />
       <div className={styles.container}>
         <h2>Update Income</h2>
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleUpdateIncome} className={styles.form}>
           <input
             type="number"
-            value={totalIncome}
-            onChange={(e) => setTotalIncome(e.target.value)}
+            value={incomeToAdd}
+            onChange={(e) => setIncomeToAdd(e.target.value)}
             placeholder="Enter your income"
             required
             min="0"
             className={styles.input}
           />
-          <button type="submit" className={styles.button}>
-            Update Income
-          </button>
+          <div className={styles.buttonContainer}>
+            <button
+              type="submit"
+              className={styles.button}
+              disabled={loadingUpdate}
+            >
+              {loadingUpdate ? (
+                <BeatLoader size={10} color="#ffffff" />
+              ) : (
+                "Update Income"
+              )}
+            </button>
+            <button
+              type="button" // Prevent form submission
+              onClick={handleRemoveIncome}
+              className={styles.button}
+              disabled={loadingRemove} // Disable if loading
+            >
+              {loadingRemove ? (
+                <BeatLoader size={10} color="#ffffff" />
+              ) : (
+                "Set Income to Zero"
+              )}
+            </button>
+          </div>
         </form>
         <ToastContainer />
       </div>

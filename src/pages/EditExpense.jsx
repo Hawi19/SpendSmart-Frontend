@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast } from "react-toastify"; 
-import styles from "./EditExpense.module.css"; 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import { BeatLoader } from "react-spinners"; // Import BeatLoader
+import styles from "./EditExpense.module.css";
 import BackButton from "../component/BackButton";
+import Navbar from "./Navbar";
+
 const EditExpense = () => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -12,6 +16,7 @@ const EditExpense = () => {
   const [category, setCategory] = useState("");
   const [otherCategory, setOtherCategory] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false); // New state for button loading
   const navigate = useNavigate();
   const { id } = useParams();
   const token = localStorage.getItem("token");
@@ -32,7 +37,6 @@ const EditExpense = () => {
         setCategory(response.data.category);
         setDate(response.data.date);
         setDescription(response.data.description || "");
-
       } catch (error) {
         if (error.response) {
           toast.error(
@@ -47,6 +51,7 @@ const EditExpense = () => {
     };
 
     fetchExpense();
+    toast.info("Component mounted!"); // Test toast
   }, [id, navigate, token]);
 
   const handleEditExpense = async () => {
@@ -62,6 +67,8 @@ const EditExpense = () => {
       category: category === "Other" ? otherCategory : category,
     };
 
+    setIsSubmitting(true); // Start loading
+
     try {
       await axios.put(`${apiUrl}/api/expense/${id}`, data, {
         headers: {
@@ -70,9 +77,14 @@ const EditExpense = () => {
         },
       });
       toast.success("Expense updated successfully");
-      navigate("/home");
+      // Delay navigation to allow toast to be visible
+      setTimeout(() => {
+        navigate("/add-expense");
+      }, 1000);
     } catch (error) {
       toast.error("Error occurred. Try again.");
+    } finally {
+      setIsSubmitting(false); // Stop loading
     }
   };
 
@@ -82,6 +94,7 @@ const EditExpense = () => {
 
   return (
     <>
+      <Navbar />
       <BackButton className={styles.backButton} />
       <div className={styles.container}>
         <div className={styles.formContainer}>
@@ -149,16 +162,17 @@ const EditExpense = () => {
             />
           </div>
           <button
-            className={`${styles.btnPrimary} btn-lg mt-2`}
+            className={`btn btn-primary ${styles.btn} btn-lg mt-2`}
             onClick={handleEditExpense}
+            disabled={isSubmitting} // Disable button while submitting
           >
-            Save
+            {isSubmitting ? <BeatLoader size={10} color="#ffffff" /> : "Save"}
           </button>
         </div>
       </div>
+      <ToastContainer /> {/* Ensure ToastContainer is included */}
     </>
   );
 };
- 
 
 export default EditExpense;
