@@ -51,7 +51,6 @@ const EditExpense = () => {
     };
 
     fetchExpense();
-    toast.info("Component mounted!"); // Test toast
   }, [id, navigate, token]);
 
   const handleEditExpense = async () => {

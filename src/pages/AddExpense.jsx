@@ -100,6 +100,7 @@ const AddExpense = ({ onExpenseAdded }) => {
     }
     setSelectedExpenses(updatedSelection);
   };
+  
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
