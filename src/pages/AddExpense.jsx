@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server.js";
 import { AiOutlineEdit } from "react-icons/ai";
-import { toast, ToastContainer } from "react-toastify"; // Import toast
-import { BeatLoader } from "react-spinners"; // Import BeatLoader
-import styles from "./AddExpense.module.css"; // Import your CSS module
-import BackButton from "../component/BackButton.jsx";
+import { toast, ToastContainer } from "react-toastify";
+import { BeatLoader } from "react-spinners";
+import styles from "./AddExpense.module.css";
+import Back from "../component/Back.jsx";
 import Navbar from "./Navbar.jsx";
+import Footer from "./Footer.jsx";
 
 const AddExpense = ({ onExpenseAdded }) => {
   const [description, setDescription] = useState("");
@@ -16,8 +17,10 @@ const AddExpense = ({ onExpenseAdded }) => {
   const [category, setCategory] = useState("");
   const [otherCategory, setOtherCategory] = useState("");
   const [expenses, setExpenses] = useState([]);
+  const [filteredExpenses, setFilteredExpenses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedExpenses, setSelectedExpenses] = useState(new Set());
-  const [loading, setLoading] = useState(false); // Loading state for saving expense
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -28,7 +31,9 @@ const AddExpense = ({ onExpenseAdded }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data && Array.isArray(response.data.expenses)) {
-          setExpenses(sortExpensesByDate(response.data.expenses));
+          const sortedExpenses = sortExpensesByDate(response.data.expenses);
+          setExpenses(sortedExpenses);
+          setFilteredExpenses(sortedExpenses); // Initialize filtered expenses
         }
       } catch (error) {
         console.error("Error fetching expenses:", error);
@@ -39,7 +44,7 @@ const AddExpense = ({ onExpenseAdded }) => {
   }, [token]);
 
   const sortExpensesByDate = (expenses) => {
-    return expenses.sort((a, b) => new Date(a.date) - new Date(b.date));
+    return expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
   };
 
   const handleSaveExpense = async () => {
@@ -55,7 +60,7 @@ const AddExpense = ({ onExpenseAdded }) => {
       category: category === "Other" ? otherCategory : category,
     };
 
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
       const response = await axios.post(`${apiUrl}/api/expense`, data, {
@@ -66,28 +71,30 @@ const AddExpense = ({ onExpenseAdded }) => {
       });
 
       toast.success("Expense added successfully");
-      setExpenses((prevExpenses) =>
-        sortExpensesByDate([...prevExpenses, response.data.expense])
+      const newExpense = response.data.expense;
+
+      const updatedExpenses = sortExpensesByDate([...expenses, newExpense]);
+      setExpenses(updatedExpenses);
+
+      const updatedFiltered = updatedExpenses.filter((expense) =>
+        expense.category.toLowerCase().includes(searchTerm.toLowerCase())
       );
+      setFilteredExpenses(updatedFiltered);
 
       if (onExpenseAdded) {
-        onExpenseAdded(); // Trigger refresh of financial data in Home component
+        onExpenseAdded();
       }
 
-      // Reset form fields
       setDescription("");
       setAmount("");
       setDate("");
       setCategory("");
       setOtherCategory("");
     } catch (error) {
-      console.error(
-        "Error details:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Error adding expense:", error);
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -100,7 +107,6 @@ const AddExpense = ({ onExpenseAdded }) => {
     }
     setSelectedExpenses(updatedSelection);
   };
-  
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
@@ -117,16 +123,25 @@ const AddExpense = ({ onExpenseAdded }) => {
       return;
     }
 
-    // Navigate to DeleteExpense component with selected IDs
     navigate("/api/expense/delete", {
       state: { selectedIds: Array.from(selectedExpenses) },
     });
   };
 
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    const filtered = expenses.filter((expense) =>
+      expense.category.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredExpenses(filtered);
+  };
+
   return (
     <>
       <Navbar />
-      <BackButton className={styles.backButton} />
+      <Back className={styles.backButton} />
       <div className={styles.container}>
         <div className={styles.formContainer}>
           <h1 className={styles.title}>Add Expense</h1>
@@ -192,13 +207,26 @@ const AddExpense = ({ onExpenseAdded }) => {
               className={styles.input}
             />
           </div>
-          <button className={styles.button} onClick={handleSaveExpense} disabled={loading}>
+          <button
+            className={styles.button}
+            onClick={handleSaveExpense}
+            disabled={loading}
+          >
             {loading ? <BeatLoader size={10} color="#ffffff" /> : "Save"}
           </button>
         </div>
 
         {/* Expense Table */}
         <div className={styles.tableContainer}>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Search by category"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className={styles.searchBar}
+            />
+          </div>
           <h3 className={styles.subtitle}>Current Expenses</h3>
           <table className={styles.table}>
             <thead>
@@ -208,8 +236,8 @@ const AddExpense = ({ onExpenseAdded }) => {
                     type="checkbox"
                     onChange={handleSelectAll}
                     checked={
-                      selectedExpenses.size === expenses.length &&
-                      expenses.length > 0
+                      selectedExpenses.size === filteredExpenses.length &&
+                      filteredExpenses.length > 0
                     }
                   />
                 </th>
@@ -221,8 +249,8 @@ const AddExpense = ({ onExpenseAdded }) => {
               </tr>
             </thead>
             <tbody>
-              {expenses.length > 0 ? (
-                expenses.map((expense) => (
+              {filteredExpenses.length > 0 ? (
+                filteredExpenses.map((expense) => (
                   <tr key={expense._id}>
                     <td>
                       <input
@@ -231,10 +259,8 @@ const AddExpense = ({ onExpenseAdded }) => {
                         onChange={() => handleSelectExpense(expense._id)}
                       />
                     </td>
-                    <td>{expense.category}</td>
-                    <td>
-                      {expense.amount ? expense.amount.toFixed(2) : "0.00"}
-                    </td>
+                    <td>{expense.category || "N/A"}</td>
+                    <td>{expense.amount ?? "0"} ETB</td>
                     <td>
                       {expense.date
                         ? new Date(expense.date).toLocaleDateString("en-US")
@@ -259,14 +285,15 @@ const AddExpense = ({ onExpenseAdded }) => {
             </tbody>
           </table>
           <button
-            className={styles.button}
+            className={styles.deletebutton}
             onClick={handleDeleteSelectedExpenses}
           >
             Delete Selected
           </button>
         </div>
       </div>
-      <ToastContainer /> {/* Ensure ToastContainer is included */}
+      <ToastContainer />
+      <Footer />
     </>
   );
 };

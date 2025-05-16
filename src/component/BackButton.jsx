@@ -1,14 +1,19 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { GoArrowLeft } from "react-icons/go";
 import styles from "./BackButton.module.css"; // Ensure this path is correct
 
-const BackButton = ({ destination = "/home" }) => {
+const BackButton = () => {
+  const navigate = useNavigate();
+
+  const handleBack = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
   return (
     <div className={styles.backButtonContainer}>
-      <Link to={destination} className={styles.backButton}>
+      <a href="#" onClick={handleBack} className={styles.backButton}>
         <GoArrowLeft />
-       
-      </Link>
+      </a>
     </div>
   );
 };

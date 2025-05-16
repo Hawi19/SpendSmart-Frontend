@@ -1,3 +1,20 @@
-body{
-  background-color: #f5f7fa;
+
+body, html {
+  height: 100%; 
+  margin: 0; 
+}
+
+.container {
+  min-height: calc(100vh - 400px);
+  display: flex;
+  flex-direction: column;
+  justify-content:center; 
+}
+
+.footer {
+  margin-top: auto; 
+}
+.footerContainer {
+  margin-top: auto;
+  padding: 20px 0; 
 }

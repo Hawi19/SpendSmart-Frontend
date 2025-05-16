@@ -1,7 +1,6 @@
 body {
   background-color: #f5f7fa;
   margin: 0;
-
 }
 
 .container {
@@ -11,8 +10,7 @@ body {
   justify-content: flex-start;
   padding: 20px;
   background-color: #f5f7fa;
- height: 100%;
-  overflow: hidden;
+  min-height: calc(100vh - 350px); /* Ensure the container takes full height minus footer */
 }
 
 h2 {

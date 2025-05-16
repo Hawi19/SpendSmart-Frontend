@@ -5,6 +5,8 @@ import ExpenseCalendar from "./ExpenseCalendar.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./WeeklyExpenses.module.css";
 import BackButton from "../component/BackButton.jsx";
+import Navbar from "./Navbar.jsx";
+import Footer from "./Footer.jsx";
 
 const WeeklyExpenses = () => {
   const [selectedWeek, setSelectedWeek] = useState({
@@ -23,19 +25,24 @@ const WeeklyExpenses = () => {
         const response = await axios.get(`${apiUrl}/api/expense`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log("API Response:", response.data.expenses); // Debug log
 
         const filteredExpenses = response.data.expenses.filter((expense) => {
           const expenseDate = new Date(expense.date);
-          return (
-            expenseDate >= selectedWeek.startOfWeek &&
-            expenseDate <= selectedWeek.endOfWeek
-          );
+          expenseDate.setHours(0, 0, 0, 0); // Normalize to midnight
+
+          const start = new Date(selectedWeek.startOfWeek);
+          start.setHours(0, 0, 0, 0); // Normalize to midnight
+
+          const end = new Date(selectedWeek.endOfWeek);
+          end.setHours(23, 59, 59, 999); // Normalize to end of day
+
+          return expenseDate >= start && expenseDate <= end;
         });
 
         setWeeklyExpenses(filteredExpenses);
       } catch (error) {
         console.error("Error fetching weekly expenses:", error);
-        // Handle error with a simple console log or a message in the UI
       } finally {
         setLoading(false);
       }
@@ -50,6 +57,7 @@ const WeeklyExpenses = () => {
 
   return (
     <>
+      <Navbar />
       <BackButton className={styles.backButton} />
       <div className={`container mt-4 ${styles.container}`}>
         <h1 className={`text-center mb-4 ${styles.title}`}>Weekly Expenses</h1>
@@ -89,6 +97,7 @@ const WeeklyExpenses = () => {
           </>
         )}
       </div>
+      <Footer/>
     </>
   );
 };

@@ -1,0 +1,36 @@
+.footer {
+    background-color: #333; /* Dark gray instead of black */
+    color: white;
+    padding: 30px 0; /* Increased padding for better spacing */
+    text-align: center;
+    position: relative; /* Ensure it stays at the bottom */
+    bottom: 0; /* Stick to the bottom of the page */
+    width: 100%; /* Full width */
+    margin-top: 60px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.text {
+    margin: 0;
+    font-size: 14px; /* Adjust font size if necessary */
+}
+
+.links {
+    margin-top: 10px;
+}
+
+.link {
+    color: #61dafb; /* Link color */
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 14px; /* Adjust font size for links */
+}
+
+.link:hover {
+    text-decoration: underline;
+}

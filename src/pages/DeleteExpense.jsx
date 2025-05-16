@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast, ToastContainer } from "react-toastify"; // Ensure toast is imported
-import { BeatLoader } from "react-spinners"; // Import BeatLoader
+import { toast, ToastContainer } from "react-toastify";
+import { BeatLoader } from "react-spinners";
 import BackButton from "../component/BackButton";
 import styles from "./DeleteExpense.module.css";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 const DeleteExpense = () => {
-  const [loading, setLoading] = useState(false); // Loading state for deletion
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { state } = useLocation();
-  const selectedIds = state?.selectedIds || []; // Get selected IDs from state
+  const selectedIds = state?.selectedIds || [];
 
   const handleDeleteExpenses = async () => {
     const token = localStorage.getItem("token");
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
       await Promise.all(
@@ -30,15 +31,15 @@ const DeleteExpense = () => {
         )
       );
 
-      toast.success("Expenses deleted successfully"); // Show success message
+      toast.success("Expenses deleted successfully");
       setTimeout(() => {
         navigate("/home");
-      }, 2000); // Delay navigation for 2 seconds
+      }, 2000);
     } catch (error) {
       console.error("Error deleting expenses:", error);
-      toast.error("Error occurred while deleting the expenses. Try again."); // Show error message
+      toast.error("Error occurred while deleting the expenses. Try again.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -46,7 +47,7 @@ const DeleteExpense = () => {
     <>
       <Navbar />
       <BackButton className={styles.backButton} />
-      <div className="container mt-5">
+      <div className={`${styles.container} container mt-5`}>
         <h1 className="text-center mb-4">Delete Expenses</h1>
         <div className="border border-danger rounded p-5 text-center">
           <h5 className="mb-4">
@@ -56,7 +57,7 @@ const DeleteExpense = () => {
             <button
               className="btn btn-primary mx-2"
               onClick={handleDeleteExpenses}
-              disabled={loading} // Disable button while loading
+              disabled={loading}
             >
               {loading ? <BeatLoader size={10} color="#ffffff" /> : "Yes"}
             </button>
@@ -69,7 +70,8 @@ const DeleteExpense = () => {
           </div>
         </div>
       </div>
-      <ToastContainer /> {/* Ensure ToastContainer is included */}
+      <ToastContainer />
+      <Footer />
     </>
   );
 };

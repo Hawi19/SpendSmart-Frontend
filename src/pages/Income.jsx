@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../api/server";
-import { toast, ToastContainer } from "react-toastify"; // Import toast
-import { BeatLoader } from "react-spinners"; // Import BeatLoader
-import styles from "./Income.module.css"; // Import your CSS module
+import { toast, ToastContainer } from "react-toastify";
+import { BeatLoader } from "react-spinners";
+import styles from "./Income.module.css";
 import BackButton from "../component/BackButton";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 const Income = () => {
   const [incomeToAdd, setIncomeToAdd] = useState("");
-  const [loadingUpdate, setLoadingUpdate] = useState(false); // Loading state for updating income
-  const [loadingRemove, setLoadingRemove] = useState(false); // Loading state for removing income
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [loadingRemove, setLoadingRemove] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -37,7 +38,7 @@ const Income = () => {
       return;
     }
 
-    setLoadingUpdate(true); // Start loading for update
+    setLoadingUpdate(true);
 
     try {
       const currentIncome = await fetchCurrentIncome();
@@ -71,16 +72,16 @@ const Income = () => {
           "Error updating income. Please try again."
       );
     } finally {
-      setLoadingUpdate(false); // Stop loading for update
+      setLoadingUpdate(false);
     }
   };
 
   const handleRemoveIncome = async () => {
-    setLoadingRemove(true); // Start loading for remove
+    setLoadingRemove(true);
     try {
       const response = await axios.put(
         `${apiUrl}/api/user/income`,
-        { totalIncome: 0 }, // Set income to zero
+        { totalIncome: 0 },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,7 +93,7 @@ const Income = () => {
       if (response.data.totalIncome !== undefined) {
         localStorage.setItem("totalIncome", 0);
         toast.success("Income removed successfully!");
-        setIncomeToAdd(""); // Clear input field
+        setIncomeToAdd("");
       }
     } catch (error) {
       console.error("Error removing income:", error.response || error);
@@ -101,7 +102,7 @@ const Income = () => {
           "Error removing income. Please try again."
       );
     } finally {
-      setLoadingRemove(false); // Stop loading for remove
+      setLoadingRemove(false);
     }
   };
 
@@ -137,7 +138,7 @@ const Income = () => {
               type="button" // Prevent form submission
               onClick={handleRemoveIncome}
               className={styles.button}
-              disabled={loadingRemove} // Disable if loading
+              disabled={loadingRemove}
             >
               {loadingRemove ? (
                 <BeatLoader size={10} color="#ffffff" />
@@ -147,8 +148,9 @@ const Income = () => {
             </button>
           </div>
         </form>
-        <ToastContainer />
       </div>
+      <ToastContainer />
+      <Footer />
     </>
   );
 };

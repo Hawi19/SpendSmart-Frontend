@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 import axios from "axios";
 import { apiUrl } from "../api/server.js";
 import styles from "./Home.module.css"; 
-
+import Footer from "./Footer.jsx";
 const Home = () => {
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
@@ -132,15 +132,15 @@ const Home = () => {
       <div className={styles.cardsContainer}>
         <div className={styles.card}>
           <h2>Total Income</h2>
-          <p className={styles.amount}>{totalIncome.toFixed(2)}</p>
+          <p className={styles.amount}>{totalIncome} ETB</p>
         </div>
         <div className={styles.card}>
           <h2>Total Expenses</h2>
-          <p className={styles.amount}>{totalExpenses.toFixed(2)}</p>
+          <p className={styles.amount}>{totalExpenses} ETB</p>
         </div>
         <div className={styles.card}>
           <h2>Net Income</h2>
-          <p className={styles.amount}>{netIncome.toFixed(2)}</p>
+          <p className={styles.amount}>{netIncome} ETB</p>
         </div>
       </div>
       <div className={styles.buttonContainer}>
@@ -175,7 +175,7 @@ const Home = () => {
               recentTransactions.map((transaction) => (
                 <tr key={transaction._id}>
                   <td>{transaction.category || "N/A"}</td>
-                  <td>{transaction.amount.toFixed(2)}</td>
+                  <td>{transaction.amount} ETB</td>
                   <td>
                     {new Date(transaction.date).toLocaleDateString("en-US")}
                   </td>
@@ -189,6 +189,7 @@ const Home = () => {
             )}
           </tbody>
         </table>
+        <Footer />
       </div>
     </div>
   );
