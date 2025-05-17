@@ -59,7 +59,7 @@ const SignUp = () => {
 
       if (response.status === 200 || response.status === 201) {
         toast.success(
-          "Sign Up successful! Please check your emailto verify your account.."
+          "Sign Up successful! Please check your email to verify your account.."
         );
         setTimeout(() => navigate("/"), 2000);
       } else {
